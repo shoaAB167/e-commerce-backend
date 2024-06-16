@@ -1,0 +1,1 @@
+Time reducing technique to make api call
