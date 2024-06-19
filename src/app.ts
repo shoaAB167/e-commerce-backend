@@ -1,6 +1,7 @@
 import express from "express"
 import { connectDB } from "./utils/features.js";
 import { errorMiddleware } from "./middlewares/error.js";
+import NodeCache from 'node-cache'
 
 //importing routers
 import userRoutes from './routes/user.js'
@@ -9,6 +10,9 @@ import productRoutes from './routes/products.js'
 const port = 4000;
 const app = express();
 connectDB();
+
+//stdTTL parameter from NodeCache used to store data in cache for some seconds
+export const myCache = new NodeCache()
 
 //Middleware to parse JSON bodies
 app.use(express.json())
