@@ -63,18 +63,18 @@ export const getAdminProducts = TryCatch(async (req: Request<{}, {}, NewProductR
 export const getSingleProduct = TryCatch(async (req, res, next) => {
     let product;
     const id = req.params.id;
-    if(myCache.has(`product-${id}`)) 
+    if (myCache.has(`product-${id}`))
         product = JSON.parse(myCache.get(`product-${id}`) as string)
     else {
         product = await Product.findById(req.params.id);
-        if(!product)
-            next(new ErrorHandler("Product Not Found",404))
-        myCache.set(`product${id}`,JSON.stringify(product))
+        if (!product)
+            next(new ErrorHandler("Product Not Found", 404))
+        myCache.set(`product${id}`, JSON.stringify(product))
     }
     return res.status(200).json({
         success: true,
         product
-    }) 
+    })
 })
 
 export const newProduct = TryCatch(async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
@@ -95,8 +95,8 @@ export const newProduct = TryCatch(async (req: Request<{}, {}, NewProductRequest
         name, price, stock, category: category.toLowerCase(), photo: photo?.path
     });
 
-    await invalidateCache({product: true})
-    
+    await invalidateCache({ product: true, order: true, admin: true })
+
     return res.status(201).json({
         success: true,
         message: "Product Created Successfully"
@@ -128,7 +128,7 @@ export const updateProduct = TryCatch(async (req, res, next) => {
 
     await product.save()
 
-    await invalidateCache({product: true})
+    await invalidateCache({ product: true, productId: String(product._id) })
 
     return res.status(200).json({
         success: true,
@@ -145,7 +145,9 @@ export const deleteProduct = TryCatch(async (req, res, next) => {
         console.log("Product Photo Deleted")
     });
     await product.deleteOne()
-    await invalidateCache({product: true})
+
+    await invalidateCache({ product: true, productId: String(product._id) })
+
     return res.status(200).json({
         success: true,
         message: "Product Deleted Successfully"
