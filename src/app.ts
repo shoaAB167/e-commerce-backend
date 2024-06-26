@@ -9,6 +9,8 @@ import {config} from 'dotenv'
 import userRoutes from './routes/user.js'
 import productRoutes from './routes/products.js'
 import orderRoutes from './routes/order.js'
+import paymentRoutes from './routes/payment.js'
+import dashboardRoutes from './routes/stats.js'
 
 config({
     path:"./.env"
@@ -36,6 +38,8 @@ app.get("/", (req, res) => {
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/product", productRoutes)
 app.use("/api/v1/order", orderRoutes)
+app.use("/api/v1/payment", paymentRoutes)
+app.use("/api/v1/dashboard", dashboardRoutes)
 
 //serving static files
 app.use("/uploads",express.static("uploads"))
