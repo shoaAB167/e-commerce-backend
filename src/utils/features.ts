@@ -19,7 +19,7 @@ export const invalidateCache = async ({ product, order, admin, userId, orderId, 
     if (typeof productId === "string") productKeys.push(`product-${productId}`)
     //array is object
     if (typeof productId === "object") productId.forEach((i) => productKeys.push(`product-${i}`))
-    
+
     myCache.del(productKeys);
   }
   //same as products
@@ -45,10 +45,25 @@ export const reduceStock = async (orderItems: OrderItemType[]) => {
   }
 }
 
-export const calculatePercentage = (thisMonth:number,lastMonth:number) =>{ 
-  if(lastMonth === 0) return thisMonth*100
-  const percent = ((thisMonth - lastMonth)/lastMonth) * 100
+export const calculatePercentage = (thisMonth: number, lastMonth: number) => {
+  if (lastMonth === 0) return thisMonth * 100
+  const percent = ((thisMonth - lastMonth) / lastMonth) * 100
   return Number(percent.toFixed(0))
+}
+
+export const getInventories = async ({ categories, productsCount }: { categories: string[], productsCount: number }) => {
+  const categoriesCountPromise = categories.map((category) => Product.countDocuments({ category }))
+ 
+  const categoriesCount = await Promise.all(categoriesCountPromise);
+  
+  const categoryCount: Record<string, number>[] = [];
+  
+  categories.forEach((category, i) => {
+    categoryCount.push({
+      [category]: Math.round(categoriesCount[i] / productsCount * 100),
+    })
+  })
+  return categoryCount
 }
 
 
