@@ -1,6 +1,29 @@
 import mongoose from "mongoose";
-import { trim } from "validator";
-
+interface IOrder extends Document {
+   shippingInfo: {
+       address: string;
+       city: string;
+       state: string;
+       country: string;
+       pinCode: number;
+   };
+   user: string;
+   subtotal: number;
+   tax: number;
+   shippingCharges: number;
+   discount: number;
+   total: number;
+   status: "Processing" | "Shipped" | "Delivered";
+   orderItems: {
+       name: string;
+       photo: string;
+       price: number;
+       quantity: number;
+       productId: mongoose.Types.ObjectId;
+   }[];
+   createdAt: Date;
+   updatedAt: Date;
+}
 const orderSchema = new mongoose.Schema(
     {
      shippingInfo:{
@@ -73,4 +96,4 @@ const orderSchema = new mongoose.Schema(
     timestamps: true
 })
 
-export const Order = mongoose.model("Order", orderSchema)
+export const Order = mongoose.model<IOrder>("Order", orderSchema)

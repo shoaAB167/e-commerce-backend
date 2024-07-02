@@ -1,5 +1,14 @@
-import mongoose from "mongoose";
-import { trim } from "validator";
+import mongoose, { Path } from "mongoose";
+
+interface IProduct extends Document {
+    name: string,
+    photo: string,
+    price: number,
+    stock: number,
+    category: string,
+    createdAt: Date;
+    updatedAt: Date;
+}
 
 const productSchema = new mongoose.Schema(
     {
@@ -29,4 +38,4 @@ const productSchema = new mongoose.Schema(
 })
 
 
-export const Product = mongoose.model("Product", productSchema)
+export const Product = mongoose.model<IProduct>("Product", productSchema)
