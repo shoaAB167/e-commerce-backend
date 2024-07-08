@@ -82,7 +82,7 @@ export const newOrder = TryCatch(async (req: Request<{}, {}, NewOrderRequestBody
     //reducing stock by ordered quantity
     await reduceStock(orderItems);
     //remove all cache as all data gets change
-    await invalidateCache({ product: true, order: true, admin: true, userId: user, productId: temp })
+    invalidateCache({ product: true, order: true, admin: true, userId: user, productId: temp })
 
     return res.status(201).json({
         success: true,
@@ -111,7 +111,7 @@ export const processOrder = TryCatch(async (req, res, next) => {
 
     await order.save();
     //remove all cache as all data gets change
-    await invalidateCache({ product: false, order: true, admin: true, userId: order.user, orderId: order._id.toString() })
+    invalidateCache({ product: false, order: true, admin: true, userId: order.user, orderId: order._id.toString() })
 
     return res.status(200).json({
         success: true,
@@ -129,7 +129,7 @@ export const deleteOrder = TryCatch(async (req, res, next) => {
 
     await order.deleteOne();
     //remove all cache as all data gets change
-    await invalidateCache({ product: false, order: true, admin: true, userId: order.user, orderId: order._id.toString() })
+    invalidateCache({ product: false, order: true, admin: true, userId: order.user, orderId: order._id.toString() })
 
     return res.status(201).json({
         success: true,

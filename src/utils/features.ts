@@ -12,7 +12,7 @@ export const connectDB = (uri: string) => {
     .catch((e) => console.log(e));
 };
 
-export const invalidateCache = async ({ product, order, admin, userId, orderId, productId }: InvalidateCacheProps) => {
+export const invalidateCache = ({ product, order, admin, userId, orderId, productId }: InvalidateCacheProps) => {
   if (product) {
     const productKeys: string[] = ["latest-products", "categories", "all-products"];
 
@@ -30,7 +30,7 @@ export const invalidateCache = async ({ product, order, admin, userId, orderId, 
   }
 
   if (admin) {
-
+     myCache.del(["admin-stats","admin-pie-charts","admin-bar-charts","admin-line-charts"])
   }
 }
 
@@ -70,22 +70,26 @@ export const getInventories = async ({ categories, productsCount }: { categories
 }
 
 interface MyDocument extends Document {
-  createdAt: Date
+  createdAt: Date;
+  discount?: number;
+  total?: number;
 }
 
 type FuncProps = {
   length: number,
   today: Date
   docArr: MyDocument[],
+  property?: "discount" | "total"
 }
-export const getChartData = ({ length, today, docArr }: FuncProps) => {
+
+export const getChartData = ({ length, today, docArr, property }: FuncProps) => {
   const data: number[] = new Array(length).fill(0)
 
   docArr.forEach((i) => {
     const creationDate = i.createdAt;
     const monthDiff = (today.getMonth() - creationDate.getMonth() + 12) % 12
     if (monthDiff < length) {
-      data[length - monthDiff - 1] += 1;
+      data[length - monthDiff - 1] += property ? i[property]! : 1;
     }
   })
   return data;
