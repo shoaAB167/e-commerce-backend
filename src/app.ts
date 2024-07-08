@@ -4,6 +4,7 @@ import { errorMiddleware } from "./middlewares/error.js";
 import NodeCache from 'node-cache'
 import morgan from "morgan";
 import {config} from 'dotenv'
+import Stripe from "stripe";
 
 //importing routers
 import userRoutes from './routes/user.js'
@@ -12,20 +13,23 @@ import orderRoutes from './routes/order.js'
 import paymentRoutes from './routes/payment.js'
 import dashboardRoutes from './routes/stats.js'
 
+
 config({
     path:"./.env"
 })
 
 const port = process.env.PORT || 4000;
 const mongoURI = process.env.MONGO_URI || "";
+const stripeKey = process.env.STRIPE_KEY || ""
+
+connectDB(mongoURI);
+
+export const stripe = new Stripe(stripeKey)
 
 //stdTTL parameter from NodeCache used to store data in cache for some seconds
 export const myCache = new NodeCache()
 
 const app = express();
-
-connectDB(mongoURI);
-
 //Middleware to parse JSON bodies
 app.use(express.json())
 //showing request log on terminal
