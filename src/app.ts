@@ -5,7 +5,7 @@ import NodeCache from 'node-cache'
 import morgan from "morgan";
 import {config} from 'dotenv'
 import Stripe from "stripe";
-
+import cors from 'cors'
 //importing routers
 import userRoutes from './routes/user.js'
 import productRoutes from './routes/products.js'
@@ -23,7 +23,6 @@ const mongoURI = process.env.MONGO_URI || "";
 const stripeKey = process.env.STRIPE_KEY || ""
 
 connectDB(mongoURI);
-
 export const stripe = new Stripe(stripeKey)
 
 //stdTTL parameter from NodeCache used to store data in cache for some seconds
@@ -34,6 +33,7 @@ const app = express();
 app.use(express.json())
 //showing request log on terminal
 app.use(morgan("dev"))
+app.use(cors())
 
 app.get("/", (req, res) => {
     res.send("API working with /api/v1")
