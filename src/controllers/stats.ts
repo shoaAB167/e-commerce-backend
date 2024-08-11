@@ -134,7 +134,7 @@ export const getDashboardStat = TryCatch(async (req, res, next) => {
 
         const categoryCount: Record<string, number>[] = await getInventories({ categories, productsCount })
 
-        const ratio = {
+        const userRatio = {
             male: usersCount - femalUsersCount,
             female: femalUsersCount
         }
@@ -154,7 +154,7 @@ export const getDashboardStat = TryCatch(async (req, res, next) => {
                 order: orderMonthCounts,
                 revenue: orderMonthlyRevenue
             },
-            ratio,
+            userRatio,
             latestTransaction: modifiedLatestTransaction
         }
 

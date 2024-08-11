@@ -30,7 +30,7 @@ export const newUser = TryCatch(async (req: Request<{}, {}, NewUserRequestBody>,
 export const getAllUsers = TryCatch(async (req, res, next) => {
     //to hide field we can use select : User.find({}, '-password')
     // If you want to ensure `dob` is excluded in another way, you could manually remove it from each user object
-    const users = await User.find({}, { name: 0 })
+    const users = await User.find({})
     return res.status(200).json({
         success: true,
         users: users
