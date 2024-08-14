@@ -11,7 +11,7 @@ export const adminOnly = TryCatch(async (req, res, next) => {
     const user = await User.findById(id);
     if (!user)
         next(new ErrorHandler("Invaild Id", 400))
-    console.log("user =>",user)
+    
     if (user?.role != "admin")
         next(new ErrorHandler("Please login as admin", 401))
 
