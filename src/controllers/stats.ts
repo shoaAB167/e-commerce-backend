@@ -119,8 +119,8 @@ export const getDashboardStat = TryCatch(async (req, res, next) => {
         // const orderMonthCounts = new Array(6).fill(0)
         // const orderMonthlyRevenue = new Array(6).fill(0)
 
-        const orderMonthCounts = getChartData({ length: 12, today, docArr : lastSixMonthOrders, property:"discount" })
-        const orderMonthlyRevenue = getChartData({ length: 12, today, docArr : lastSixMonthOrders, property:"total" })
+        const orderMonthCounts = getChartData({ length: 12, today, docArr: lastSixMonthOrders, property: "discount" })
+        const orderMonthlyRevenue = getChartData({ length: 12, today, docArr: lastSixMonthOrders, property: "total" })
 
         // lastSixMonthOrders.forEach((order) => {
         //     const creationDate = order.createdAt;
@@ -291,12 +291,12 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
 
         const productCounts = getChartData({ length: 6, today, docArr: products })
         const userCounts = getChartData({ length: 6, today, docArr: users })
-        const orderCounts = getChartData({ length: 12, today, docArr : orders })
-        
+        const orderCounts = getChartData({ length: 12, today, docArr: orders })
+
         charts = {
-            productCounts,
-            userCounts,
-            orderCounts
+            products: productCounts,
+            users: userCounts,
+            orders: orderCounts
         }
         myCache.set(key, JSON.stringify(charts))
     }
@@ -326,16 +326,16 @@ export const getLineCharts = TryCatch(async (req, res, next) => {
         const [products, users, orders] = await Promise.all([
             Product.find(baseQuery).select("createdAt"),
             User.find(baseQuery).select("createdAt"),
-            Order.find(baseQuery).select(["createdAt","discount","total"])
+            Order.find(baseQuery).select(["createdAt", "discount", "total"])
         ])
 
         const productCounts = getChartData({ length: 12, today, docArr: products })
         const userCounts = getChartData({ length: 12, today, docArr: users })
-        const discount = getChartData({ length: 12, today, docArr : orders, property:"discount" })
-        const revenue = getChartData({ length: 12, today, docArr : orders, property:"total" })
+        const discount = getChartData({ length: 12, today, docArr: orders, property: "discount" })
+        const revenue = getChartData({ length: 12, today, docArr: orders, property: "total" })
         charts = {
-            users : userCounts,
-            products : productCounts,
+            users: userCounts,
+            products: productCounts,
             discount,
             revenue
         }
